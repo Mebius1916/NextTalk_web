@@ -14,7 +14,7 @@ const MessageForm = () => {
   return (
     <form className="relative  rounded-t-xl bottom-4" onSubmit={handleSubmit}>
       <div className=" mx-auto max-w-3xl flex">
-        <div className ='text-gray-900 border-0 shadow-none w-[40rem]'>
+        <div className ='text-gray-900 border-0 shadow-none w-[40rem] ml-12'>
         <TextArea
             name="content"
             //@ts-ignore
