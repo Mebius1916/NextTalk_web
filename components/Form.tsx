@@ -12,8 +12,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image'
 import mebius from '../public/images/mebius.jpg'
-// import { useRouter } from 'next/navigation';
-// import toast from 'react-hot-toast';
 const Form = ({ type }: { type: string }) => {
   const { data: session } = useSession();
   const router = useRouter()
@@ -80,6 +78,7 @@ const Form = ({ type }: { type: string }) => {
       }
     }
     if (type === "login") {
+      toast.info("Logging in...");
       const res = await signIn("credentials", {
         ...data,
         redirect: false,
