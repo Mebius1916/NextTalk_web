@@ -2,8 +2,18 @@ import MessagesList from '../components/MessageList'
 import { MessagesProvider } from '../lib/useMessages'
 import Layout from '../components/Layout'
 import ChatLayout from '../components/ChatLayout'
+import { useSession } from 'next-auth/react'
+import { SessionData } from '@/lib/type'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 const IndexPage = () => {
+  const { data: session } = useSession();
+  const currentUser = session?.user as SessionData;
+  const router = useRouter();
+  useEffect(() => {
+    if (!currentUser) router.push("/auth/login");
+  }, [session]);
   return (
     <MessagesProvider>
       <Layout>

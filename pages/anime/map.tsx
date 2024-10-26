@@ -1,10 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ChatLayout from '../../components/ChatLayout'
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useRouter } from 'next/router';
+import { SessionData } from '@/lib/type';
+import { useSession } from 'next-auth/react';
 const map = () => {
-  const [animeMap, setAnimeMap] = useState("https://anitabi.cn/map");
+  const { data: session } = useSession();
+  const currentUser = session?.user as SessionData;
   const router = useRouter();
+  useEffect(() => {
+    if (!currentUser) router.push("/auth/login");
+  }, [session]);
+  const [animeMap, setAnimeMap] = useState("https://anitabi.cn/map");
   const refresh = () =>{
     setAnimeMap("https://anitabi.cn/map");
     router.reload();
