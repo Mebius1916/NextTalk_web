@@ -51,7 +51,7 @@ const ChatBox = ({ chat, currentUser, currentChatId }: ChatBox) => {
 
 
   
-function displayTime(createdAt) {
+function displayTime(createdAt:any) {
   const createdAtDate = new Date(createdAt);
   const now = new Date();
 

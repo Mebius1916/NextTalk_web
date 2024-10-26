@@ -63,9 +63,9 @@ const Chat = () => {
             }
           })
         );
-        const firstChat = chats.find(c => c._id === updatedChat.id);
+        const firstChat = chats.find((c:any) => c._id === updatedChat.id);
         if (firstChat) {
-          setChats([firstChat,...chats.filter(c => c._id!== updatedChat.id)]);
+          setChats([firstChat,...chats.filter((c:any) => c._id!== updatedChat.id)]);
         }
       };
 
@@ -102,12 +102,12 @@ const Chat = () => {
         />
         <div className='h-[calc(100vh-7.155rem)] ml-4 mr-2 w-64 overflow-y-auto'>
 
-          {chats?.map((chat, index) => (
+          {chats?.map((chat:any, index) => (
             <div className='relative' key={chat?._id}>
               <ChatBox 
                 chat={chat}
                 key={index}
-                currentUser={currentUser}
+                currentUser={currentUser as SessionData}
                 currentChatId={currentChatId}
               />
               {/* <div className='absolute right-2 top-[1.4rem] opacity-40' onClick={(e) => handleClick(e, chat)}>

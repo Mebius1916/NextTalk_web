@@ -15,6 +15,7 @@ import { Button } from "@nextui-org/react";
 const ChatDetails = ({ chatId }: { chatId: string }) => {
   const [loading, setLoading] = useState(true);
   const [chat, setChat] = useState<chatData>({
+    _id:'',
     members: [],
     messages: [],
     isGroup: false,
@@ -24,7 +25,7 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
   const messageLength=  chat?.messages[chat?.messages.length - 1] as any
   const lastMessage=chat?.messages?.length > 0 && messageLength.text;
   
-  const [otherMembers, setOtherMembers] = useState([]);
+  const [otherMembers, setOtherMembers] = useState([]) as any;
   const { data: session } = useSession();
   const currentUser = session?.user as SessionData; 
   const [isSend, setIsSend] = useState(
@@ -39,8 +40,9 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
   const handleStateChange = () => {
     setIsFriend(true);
 }
+const userSend = currentUser?.isSend as any;
 useEffect(() => {
-  setIsSend(otherMembers.length === 1 && currentUser?.isSend.includes(otherMembers[0]?._id));
+  setIsSend(otherMembers.length === 1 && userSend.includes(otherMembers[0]?._id));
   setIsFriend( currentUser && currentUser.friends && otherMembers.length === 1 ? currentUser.friends.includes(otherMembers[0]?._id) : false)
 }, [otherMembers,currentUser,chat]);
 // console.log(otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend &&!isFriend)
@@ -165,7 +167,7 @@ useEffect(() => {
 
   /* Scrolling down to the bottom when having the new message */
 
-  const bottomRef = useRef(null);
+  const bottomRef = useRef(null) as any; 
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
