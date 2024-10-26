@@ -9,13 +9,14 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse) {
     const body = await req.body;
 
     const { username,email,password,VerificationCode,code } = body;
+    console.log(body)
     // 检查用户是否已存在
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).send("User already exists");
+      return res.status(400).json({error:"User already exists"});
     }
     if (code!== VerificationCode) {
-      return res.status(400).send("Verification code is incorrect");
+      return res.status(400).json({error:"Verification code is incorrect"});
     }
     // 哈希密码并创建新用户
     const hashedPassword = await hash(password, 10);

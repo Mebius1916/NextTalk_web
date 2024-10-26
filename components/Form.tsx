@@ -12,6 +12,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image'
 import mebius from '../public/images/mebius.jpg'
+// import { useRouter } from 'next/navigation';
+// import toast from 'react-hot-toast';
 const Form = ({ type }: { type: string }) => {
   const { data: session } = useSession();
   const router = useRouter()
@@ -57,26 +59,36 @@ const Form = ({ type }: { type: string }) => {
   } = useForm<SessionData>();
   const onSubmit = async (data: SessionData) => {
     if (type === "register") {
+      toast.info("Registering...");
       const allData = {
         ...data,
         code: code
-      }
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(allData),
-      });
-      console.log(res);
-      if (res.ok) {
-        router.push("/auth/login");
-      } 
-      const Res=res as any;     
-      if (Res?.error) {
-        toast.error(Res?.error);
+      };
+      try {
+        const res = await fetch("/api/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(allData),
+        });
+    
+        if (res.ok) {
+          router.push("/auth/login");
+        } else {
+          // 如果响应不成功，尝试解析错误信息
+          const errorResponse = await res.json(); 
+          if (errorResponse?.error) {
+            toast.error(errorResponse.error);
+          }
+        }
+      } catch (error) {
+        // 处理网络或其他类型的错误
+        console.error("Network or parsing error:", error);
+        toast.error("Network or parsing error");
       }
     }
+
     if (type === "login") {
       toast.info("Logging in...");
       const res = await signIn("credentials", {
@@ -91,27 +103,37 @@ const Form = ({ type }: { type: string }) => {
         toast.error(res.error);
       }
     }
-    if(type==="reset"){
+
+    if (type === "reset") {
+      toast.info("Resetting...");
       const allData = {
         ...data,
         code: code
-      }
-      const res = await fetch("/api/reset", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(allData),
-      });
-      // console.log(res);
-      if (res.ok) {
-        router.push("/auth/login");
-      } 
-      const Res=res as any;     
-      if (Res?.error) {
-        toast.error(Res?.error);
+      };
+      try {
+        const res = await fetch("/api/reset", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(allData),
+        });
+        if (res.ok) {
+          router.push("/auth/login");
+        } else {
+          // 处理可能的错误响应
+          const errorResponse = await res.json(); 
+          if (errorResponse?.error) {
+            toast.error(errorResponse.error);
+          }
+        }
+      } catch (error) {
+        // 处理网络或其他类型的错误
+        console.error("Network or parsing error:", error);
+        toast.error("Network or parsing error");
       }
     }
+    
   }
   useEffect(() => {
     if (user) router.push(`/chats/toChat/${home}`);
@@ -123,7 +145,7 @@ const Form = ({ type }: { type: string }) => {
   const sendCode = async () => {
     if (isFirstTime) {
       setIsFirstTime(false);
-      // 初次使用，直接发送验证码
+      toast.info('Sending verification code...');
       await fetchVerificationCode();
       toast.success('Verification code sent successfully');
     } else {

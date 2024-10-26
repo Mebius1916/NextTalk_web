@@ -7,12 +7,15 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse) {
     await connectDB();
     // 从请求中解析并验证 JSON 主体
     const body = await req.body;
-    console.log(body)
+    // console.log(body)
     const { email, password,VerificationCode,code } = body;
+    if (VerificationCode!== code) {
+      return res.status(400).json({ error:"Verification code is incorrect"});
+    }
     // 检查用户是否已存在
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
-      return res.status(400).send("The user does not exist");
+      return res.status(400).json({ error: "The user does not exist" });
     }
     const hashedPassword = await hash(password, 10);
 
@@ -27,7 +30,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse) {
       email: newUser.email,
     });
   } catch (err) {
-    console.error(err);
+    // console.error(err);
     return res.status(500).send("Failed to create a new user");
   }
 }
