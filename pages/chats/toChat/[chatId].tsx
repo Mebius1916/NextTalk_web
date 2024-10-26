@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSession, signOut } from "next-auth/react";
 import { useParams, useRouter } from 'next/navigation'
-import { chatData, SessionData } from '../../../lib/type';
+import { SessionData } from '../../../lib/type';
 import ChatLayout from '../../../components/ChatLayout';
 import Loader from '../../../components/Loader';
 import ChatBox from '../../../components/ChatBox';
@@ -20,7 +20,7 @@ const Chat = () => {
   const [chats, setChats] = useState([]);
   const [search, setSearch] = useState("");
   const currentChatId = chatId.toString();
-  const currentUser = session?.user as SessionData;
+  const currentUser = session?.user as SessionData | null;
   const router = useRouter();
 
   const getChats = async () => {
@@ -48,16 +48,13 @@ const Chat = () => {
       getChats();
     }
   }, [currentUser, search]);
-
   useEffect(() => {
     if (currentUser) {
       //订阅有关自己的更新
       pusherClient.subscribe(currentUser._id);
-
       const handleChatUpdate = (updatedChat: any) => {
         setChats((allChats: any) =>
           allChats.map((chat: any) => {
-
             // 匹配当前的聊天_id
             if (chat._id === updatedChat.id) {
               return { ...chat, messages: updatedChat.messages };
@@ -66,15 +63,17 @@ const Chat = () => {
             }
           })
         );
+        const firstChat = chats.find(c => c._id === updatedChat.id);
+        if (firstChat) {
+          setChats([firstChat,...chats.filter(c => c._id!== updatedChat.id)]);
+        }
       };
 
       const handleNewChat = (newChat: any) => {
         setChats((allChats) => [...allChats, newChat] as any);
       }
-
       pusherClient.bind("update-chat", handleChatUpdate);
       pusherClient.bind("new-chat", handleNewChat);
-
       return () => {
         pusherClient.unsubscribe(currentUser._id);
         pusherClient.unbind("update-chat", handleChatUpdate);
@@ -82,11 +81,7 @@ const Chat = () => {
       };
     }
   }, [currentUser]);
-  // const handleClick = (e,chat) =>{
-  //   e.stopPropagation();
-  //   e.preventDefault();
-  //   setChats(chats => chats.filter(c=>c._id!==chat._id));
-  // }
+
   return loading ? (
     <Loader />
   ) : (
@@ -107,14 +102,17 @@ const Chat = () => {
         />
         <div className='h-[calc(100vh-7.155rem)] ml-4 mr-2 w-64 overflow-y-auto'>
 
-          {chats?.map((chat:chatData, index) => (
-            <div className='relative' key={chat._id}>
+          {chats?.map((chat, index) => (
+            <div className='relative' key={chat?._id}>
               <ChatBox 
                 chat={chat}
                 key={index}
                 currentUser={currentUser}
                 currentChatId={currentChatId}
               />
+              {/* <div className='absolute right-2 top-[1.4rem] opacity-40' onClick={(e) => handleClick(e, chat)}>
+                    <HighlightOffOutlinedIcon sx={{ fontSize: 15,pointerEvents: 'auto',color:'disabled' }} />
+              </div> */}
             </div>
           ))}
         </div>

@@ -15,8 +15,10 @@ const ChatBox = ({ chat, currentUser, currentChatId }: ChatBox) => {
   const otherMembers = chat?.members?.filter(
     (member: SessionData) => member._id !== currentUser._id
   );
-  const [lastMessage, setLastMessage] = useState(chat?.messages?.length > 0 && chat?.messages[chat?.messages.length - 1]);
-  const router = useRouter();
+
+
+  const lastMessage = chat?.messages?.length > 0 && chat?.messages[chat?.messages.length - 1];
+
   // console.log(lastMessage?.isSeen)
   const [isSeen,setIsSeen] = useState(lastMessage?.isSeen);
   const [isShow,setIsShow] = useState(lastMessage&&lastMessage?.sender?._id!==currentUser._id &&!isSeen);
@@ -48,11 +50,8 @@ const ChatBox = ({ chat, currentUser, currentChatId }: ChatBox) => {
   }, [lastMessage]);
 
 
-  useEffect(() => {
-    setLastMessage(chat?.messages?.length > 0? chat.messages[chat.messages.length - 1] : null);
-  }, [chat]);
-
-function displayTime(createdAt:string) {
+  
+function displayTime(createdAt) {
   const createdAtDate = new Date(createdAt);
   const now = new Date();
 
@@ -72,12 +71,12 @@ function displayTime(createdAt:string) {
   }
 }
   return (
-    <Link href={`/chats/toChat/${chat._id}`} onClick={read}>
+    <Link href={`/chats/toChat/${chat?._id}`} onClick={read}>
       <div
         className=
         {`flex items-start justify-between  cursor-pointer hover:bg-grey-2 w-full h-14
       bg-white mb-2 
-        ${chat._id === currentChatId ? "drop-shadow-md border-l-3 border-secondary" : ""}`}
+        ${chat?._id === currentChatId ? "drop-shadow-md border-l-3 border-secondary" : ""}`}
 
       >
         <div className="flex gap-2 ">
@@ -90,7 +89,7 @@ function displayTime(createdAt:string) {
             />
           ) : (
             <img
-              src={otherMembers[0].image || "/images/person.jpg"}
+            src={otherMembers && otherMembers.length > 0&&otherMembers[0].image ? otherMembers[0].image : "/images/person.jpg"}
               alt="profile-photo"
               className="w-10 h-10 rounded-full object-cover object-center mt-2 ml-2"
             />
@@ -100,7 +99,7 @@ function displayTime(createdAt:string) {
             {chat?.isGroup ? (
               <p className="text-base-bold text-small mt-2 whitespace-nowrap overflow-hidden text-ellipsis max-w-32">{chat?.name || "group"}</p>
             ) : (
-              <p className="text-base-bold text-small mt-2 whitespace-nowrap overflow-hidden text-ellipsis max-w-32">{otherMembers[0]?.username}</p>
+              <p className="text-base-bold text-small mt-2 whitespace-nowrap overflow-hidden text-ellipsis max-w-32">{otherMembers && otherMembers.length > 0&&otherMembers[0].username ? otherMembers[0]?.username : ''}</p>
             )}
 
             {!lastMessage && <p className="text-smm text-grey-3 whitespace-nowrap overflow-hidden text-ellipsis max-w-32">Started a chat</p>}
@@ -135,7 +134,7 @@ function displayTime(createdAt:string) {
               : displayTime(chat?.lastMessageAt)}
               {
                 isShow ?
-                 <img src='/images/isSeen.svg' className='w-4 h-4 mt-1'/> : null
+                 <img src='/images/isSeen.svg' className='w-4 h-4 mt-1 ml-10'/> : null
 
               }
 

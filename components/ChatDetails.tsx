@@ -1,4 +1,4 @@
-//@ts-nocheck
+//在当前页面开始向Chat模型个体添加Message个体_id
 "use client";
 import { useState, useEffect, useRef } from "react";
 import Loader from "./Loader";
@@ -42,7 +42,7 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
 useEffect(() => {
   setIsSend(otherMembers.length === 1 && currentUser?.isSend.includes(otherMembers[0]?._id));
   setIsFriend( currentUser && currentUser.friends && otherMembers.length === 1 ? currentUser.friends.includes(otherMembers[0]?._id) : false)
-}, [otherMembers,currentUser]);
+}, [otherMembers,currentUser,chat]);
 // console.log(otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend &&!isFriend)
 const sendFriendRequest = async () => {
   try {
