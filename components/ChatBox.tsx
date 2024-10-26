@@ -15,7 +15,7 @@ const ChatBox = ({ chat, currentUser, currentChatId }: ChatBox) => {
   const otherMembers = chat?.members?.filter(
     (member: SessionData) => member._id !== currentUser._id
   );
-  const lastMessage = chat?.messages?.length > 0 && chat?.messages[chat?.messages.length - 1];
+  const [lastMessage, setLastMessage] = useState(chat?.messages?.length > 0 && chat?.messages[chat?.messages.length - 1]);
   const router = useRouter();
   // console.log(lastMessage?.isSeen)
   const [isSeen,setIsSeen] = useState(lastMessage?.isSeen);
@@ -48,7 +48,10 @@ const ChatBox = ({ chat, currentUser, currentChatId }: ChatBox) => {
   }, [lastMessage]);
 
 
-  
+  useEffect(() => {
+    setLastMessage(chat?.messages?.length > 0? chat.messages[chat.messages.length - 1] : null);
+  }, [chat]);
+
 function displayTime(createdAt:string) {
   const createdAtDate = new Date(createdAt);
   const now = new Date();
