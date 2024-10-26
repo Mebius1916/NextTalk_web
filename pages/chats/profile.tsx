@@ -114,7 +114,7 @@ const Profile = () => {
           <CldUploadButton
             options={{ maxFiles: 1 }}
             onSuccess={uploadPhoto}
-            uploadPreset={process.env.CLOUDINARY_URL_KEY}
+            uploadPreset="kdm7bzdm"
 
           >
             <p className="text-body-bold ml-16">Upload new photo</p>
