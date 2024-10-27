@@ -17,7 +17,7 @@ const ChatBox = ({ chat, currentUser, currentChatId }: ChatBox) => {
   );
 
   const [lastMessage,setLastMessage] = useState(chat?.messages?.length > 0 && chat?.messages[chat?.messages.length - 1]); 
-
+  const [ lastMessageAt,setLastMessageAt] = useState(chat?.lastMessageAt); 
   // console.log(lastMessage?.isSeen)
   const [isSeen,setIsSeen] = useState(lastMessage?.isSeen);
   const [isShow,setIsShow] = useState(lastMessage&&lastMessage?.sender?._id!==currentUser._id &&!isSeen);
@@ -46,6 +46,7 @@ const ChatBox = ({ chat, currentUser, currentChatId }: ChatBox) => {
   useEffect(() => {
     setIsShow(lastMessage&&lastMessage?.sender?._id!==currentUser._id &&!isSeen);
     setIsSeen(isShow);
+    setLastMessageAt(lastMessage?.createdAt);
   }, [lastMessage]);
 
 useEffect(() => {
@@ -133,7 +134,7 @@ function displayTime(createdAt:any) {
           <p className="text-base-light text-grey-3 text-smm mr-2 mt-2">
             {!lastMessage
               ? displayTime(chat?.createdAt)
-              : displayTime(chat?.lastMessageAt)}
+              : displayTime(lastMessageAt)}
               {
                 isShow ?
                  <img src='/images/isSeen.svg' className='w-4 h-4 mt-1 ml-10'/> : null
