@@ -23,7 +23,8 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
     lastMessageAt: new Date(),
   });
   const messageLength=  chat?.messages[chat?.messages.length - 1] as any
-  const lastMessage=chat?.messages?.length > 0 && messageLength.text;
+  const [lastMessage, setLastMessage] = useState(chat?.messages?.length > 0 && messageLength.text);
+
   
   const [otherMembers, setOtherMembers] = useState([]) as any;
   const { data: session } = useSession();
@@ -42,9 +43,11 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
 }
 const userSend = currentUser?.isSend as any;
 useEffect(() => {
-  // setIsSend(otherMembers.length === 1 && userSend.includes(otherMembers[0]?._id));
+  setLastMessage(chat?.messages?.length > 0 && messageLength.text);
+  setIsSend(otherMembers.length === 1 && userSend.includes(otherMembers[0]?._id));
   setIsFriend( currentUser && currentUser.friends && otherMembers.length === 1 ? currentUser.friends.includes(otherMembers[0]?._id) : false)
-}, [otherMembers,currentUser,chat]);
+}, [chat,currentUser,chatId]);
+
 // console.log(otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend &&!isFriend)
 const sendFriendRequest = async () => {
   try {
@@ -59,9 +62,9 @@ const sendFriendRequest = async () => {
         friendId: otherMembers[0]?._id,
       }),
     });
-    // if (res.ok) {
-    //   setIsFriend(true);
-    // } 
+    if (res.ok) {
+      setIsFriend(true);
+    } 
   } catch (error) {
     console.error("Error sending friend request:", error);
   }
