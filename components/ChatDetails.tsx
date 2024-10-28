@@ -42,7 +42,7 @@ const ChatDetails = ({ chatId }: { chatId: string }) => {
 }
 const userSend = currentUser?.isSend as any;
 useEffect(() => {
-  setIsSend(otherMembers.length === 1 && userSend.includes(otherMembers[0]?._id));
+  // setIsSend(otherMembers.length === 1 && userSend.includes(otherMembers[0]?._id));
   setIsFriend( currentUser && currentUser.friends && otherMembers.length === 1 ? currentUser.friends.includes(otherMembers[0]?._id) : false)
 }, [otherMembers,currentUser,chat]);
 // console.log(otherMembers.length === 1 && lastMessage == `Welcome, ${currentUser?.username}` && isSend &&!isFriend)

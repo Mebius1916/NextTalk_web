@@ -35,7 +35,7 @@ const ChatBox = ({ chat, currentUser, currentChatId }: ChatBox) => {
             chatId: chat._id,
           }),
         });
-        const data = await res.json();
+        // const data = await res.json();
         // setIsSeen(true);
         // setIsShow(false);
       } catch (error) {
