@@ -23,6 +23,7 @@ const ChatBox = ({ chat, currentUser, currentChatId }: ChatBox) => {
   const [isShow,setIsShow] = useState(lastMessage&&lastMessage?.sender?._id!==currentUser._id &&!isSeen);
   const read = () => {
     const readMessage = async () => {
+      if(lastMessage){
       try {
         setIsSeen(true);
         setIsShow(false);
@@ -35,14 +36,12 @@ const ChatBox = ({ chat, currentUser, currentChatId }: ChatBox) => {
             chatId: chat._id,
           }),
         });
-        // const data = await res.json();
-        // setIsSeen(true);
-        // setIsShow(false);
       } catch (error) {
         console.log(error);
       }
     };
     readMessage();
+  }
   };
 
   useEffect(() => {
