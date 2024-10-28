@@ -24,6 +24,8 @@ const ChatBox = ({ chat, currentUser, currentChatId }: ChatBox) => {
   const read = () => {
     const readMessage = async () => {
       try {
+        setIsSeen(true);
+        setIsShow(false);
         const res = await fetch(`/api/messages/read`, {
           method: "POST",
           headers: {
@@ -34,8 +36,8 @@ const ChatBox = ({ chat, currentUser, currentChatId }: ChatBox) => {
           }),
         });
         const data = await res.json();
-        setIsSeen(true);
-        setIsShow(false);
+        // setIsSeen(true);
+        // setIsShow(false);
       } catch (error) {
         console.log(error);
       }
