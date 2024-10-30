@@ -1,7 +1,9 @@
 {
-  "name": "my-app",
-  "version": "0.1.0",
-  "private": true,
+ "private": true,
+  "name": "next_talk",
+  "description": "A real-time chat tool based on nextron (NextJS+electron) with integrated AI functions",
+  "version": "1.0.0",
+  "author": "mebius <liaoshihan176@gmail.com>",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
