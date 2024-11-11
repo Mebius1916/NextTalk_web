@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { lazy, Suspense, useEffect, useState } from 'react'
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from 'next/navigation'
 import { SessionData } from '../../lib/type';
@@ -9,7 +9,7 @@ import { CheckCircle, RadioButtonUnchecked } from '@mui/icons-material';
 import { Button, divider } from "@nextui-org/react";
 import { Input } from "@nextui-org/react";
 import {SearchIcon} from "../../components/SearchIcon";
-import EarthCanvas from '../../components/Earth';
+const EarthCanvas =lazy(() => import('../../components/Earth'));
 const ToTalk = () => {
   const { data: session } = useSession();
   const currentUser = session?.user as SessionData;
@@ -91,8 +91,7 @@ const ToTalk = () => {
     <div className='bg-gray-100 h-[calc(100vh-2.25rem)] shadow-inset-top-left flex ' id='home'>
       <div className=' flex-1 box-border '>
         <div className=' h-[calc(100vh-5rem)] mt-3 flex flex-col max-md:w-full  '>
-          <div className='flex flex-row flex-wrap content-start overflow-y-auto h-[calc(100vh-8rem)] ml-3 '>
-          <Input
+        <Input
               onChange={(e) => setSearch(e.target.value)}
               isClearable
               radius="lg"
@@ -104,6 +103,8 @@ const ToTalk = () => {
                 <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none flex-shrink-0" />
               }
             />
+          <div className='flex flex-row flex-wrap content-start overflow-y-auto h-[calc(100vh-8rem)] ml-3 '>
+          
             {contacts.map((current: SessionData, index) => (
 
               <div
@@ -131,7 +132,7 @@ const ToTalk = () => {
 
             ))}
           </div>
-          <div className='text-center'>
+          <div className='text-center mt-6'>
             <Button 
             color="secondary" 
             variant="shadow" 
@@ -146,9 +147,11 @@ const ToTalk = () => {
       <div className=' flex-1 box-border ml-6'>
 
         {!isGroup ? (
-          <div className="flex items-center justify-center h-full max-sm:hidden" >
-            <EarthCanvas />
-          </div>
+          <Suspense fallback={<Loader/>}>
+            <div className="flex items-center justify-center h-full max-sm:hidden" >
+              <EarthCanvas />
+           </div>
+        </Suspense>
         ) : (
           <>
             <div className=' h-[calc(100vh-3rem)] mt-3 flex flex-col max-sm:hidden'>
